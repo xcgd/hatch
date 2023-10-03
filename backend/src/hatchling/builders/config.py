@@ -790,7 +790,9 @@ class BuilderConfig:
     def get_distribution_path(self, relative_path: str) -> str:
         # src/foo/bar.py -> foo/bar.py
         for source, replacement in self.sources.items():
-            if relative_path.startswith(source):
+            if source == "." + os.sep:
+                return os.path.join(replacement, relative_path)
+            elif relative_path.startswith(source):
                 return relative_path.replace(source, replacement, 1)
 
         return relative_path

@@ -680,6 +680,15 @@ class TestSources:
         assert builder.config.sources[pjoin('src', 'foo', '')] == pjoin('renamed', '')
         assert builder.config.get_distribution_path(pjoin('src', 'foo', 'bar.py')) == pjoin('renamed', 'bar.py')
 
+    def test_global_mapping_dot(self, isolation):
+        config = {'tool': {'hatch': {'build': {'sources': {'.': 'renamed'}}}}}
+        builder = MockBuilder(str(isolation), config=config)
+
+        assert len(builder.config.sources) == 1
+        assert builder.config.sources[''] == pjoin('renamed', '')
+        assert builder.config.get_distribution_path('bar.py') == pjoin('renamed', 'bar.py')
+        assert builder.config.get_distribution_path(pjoin('foo', 'bar.py')) == pjoin('renamed', 'foo', 'bar.py')
+
     def test_global_mapping_source_empty_string(self, isolation):
         config = {'tool': {'hatch': {'build': {'sources': {'': 'renamed'}}}}}
         builder = MockBuilder(str(isolation), config=config)
